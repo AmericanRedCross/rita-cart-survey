@@ -112,6 +112,8 @@ function graphData() {
 		});
 
 	});
+
+	$(".loader").remove()
 }
 
 
