@@ -14,6 +14,9 @@ var totalCount = 0;
 // comma seperator for thousands
 var formatCommas = d3.format(",");
 
+//round to one decimal
+var noDecimal = d3.format(".0f");
+
 // function chain
 // ==============
 
@@ -81,63 +84,74 @@ function parseData() {
 	graphData();
 }
 
-
-
 function graphData() {
 	
 	$.each(summedResponses, function(questionIndex, questionObject){
 		var questionDivId = '';
-		var thisQuestionData;
-		for(key in questionObject){
-			questionDivId = '#' + key; // "#A01", "#A02", ...
-			thisQuestionData = questionObject[key];
-		}
-		var agree_strongly = ( thisQuestionData["agree_strongly"] / totalCount ) * 100;
-		thisQuestionData["agree_strongly"] = agree_strongly.toString() + "%";
-		var agree = agree_strongly + ( ( thisQuestionData["agree"] / totalCount ) * 100 );
-		thisQuestionData["agree"] = agree.toString() + "%";
-		var neither = agree + ( ( thisQuestionData["neither"] / totalCount ) * 100 );
-		thisQuestionData["neither"] = neither.toString() + "%";
-		var disagree = neither + ( ( thisQuestionData["disagree"] / totalCount ) * 100 );
-		thisQuestionData["disagree"] = disagree.toString() + "%";
-		var disagree_strongly = disagree + ( ( thisQuestionData["disagree_strongly"] / totalCount ) * 100 );
-		thisQuestionData["disagree_strongly"] = disagree_strongly.toString() + "%";
-		var unsure = disagree_strongly + ( ( thisQuestionData["unsure"] / totalCount ) * 100 );
-		thisQuestionData["unsure"] = unsure.toString() + "%";
-		var na = unsure + ( ( thisQuestionData["na"] / totalCount ) * 100 );
-		thisQuestionData["na"] = na.toString() + "%";
-		$.each(thisQuestionData, function(index, responseCategory){
-			var selector = questionDivId + " ." + index;
-			$(selector).attr("width", responseCategory);
+		var thisQuestionData = {};
+
+		$.each(questionObject, function(questionIndex, questionData){ 
+			questionDivId = '#' + questionIndex; // "#A01", "#A02", ...
+			thisQuestionData = questionData;
 		});
+	
+		// calculate the percentage for each and add to the div as an html data attr for the tooltip
+		$.each(thisQuestionData, function(answerIndex, answerData){
+			thisQuestionData[answerIndex] = ( answerData / totalCount ) * 100;
+			var selector = questionDivId + " ." + answerIndex;
+			var styledPercentage = noDecimal(thisQuestionData[answerIndex]) + "%";
+			$(selector).attr("data-percentage", styledPercentage);
+		});
+
+		// the viz is overlapping svg rectangle in the same category order
+		// calculate each width as its own percentage plus those to the left
+		var agree_strongly = thisQuestionData["agree_strongly"];
+		thisQuestionData["agree_strongly"] = agree_strongly.toString() + "%";
+		
+		var agree = agree_strongly + thisQuestionData["agree"];
+		thisQuestionData["agree"] = agree.toString() + "%";
+		
+		var neither = agree + thisQuestionData["neither"];
+		thisQuestionData["neither"] = neither.toString() + "%";
+		
+		var disagree = neither + thisQuestionData["disagree"];
+		thisQuestionData["disagree"] = disagree.toString() + "%";
+		
+		var disagree_strongly = disagree + thisQuestionData["disagree_strongly"];
+		thisQuestionData["disagree_strongly"] = disagree_strongly.toString() + "%";
+		
+		var unsure = disagree_strongly + thisQuestionData["unsure"];
+		thisQuestionData["unsure"] = unsure.toString() + "%";
+		
+		var na = unsure + thisQuestionData["na"];
+		thisQuestionData["na"] = na.toString() + "%";
+		
+		// use the calculated widths to adjust the rectangles
+		$.each(thisQuestionData, function(indexa, responseCategorya){
+			var selector = questionDivId + " ." + indexa;
+			$(selector).attr("width", responseCategorya);
+		});
+		
 
 	});
 
-	$(".loader").remove()
+	d3.selectAll(".response-bar").on("mouseover", function(d){
+		var tooltipText = $(this).attr("data-percentage");
+		$('#tooltip').append(tooltipText);       
+	}).on("mouseout", function(){ 
+        $('#tooltip').empty();
+    });
+	$(".response-bar").mouseover(function(e) {        
+        //Set the X and Y axis of the tooltip
+        $('#tooltip').css('top', e.pageY  );
+        $('#tooltip').css('left', e.pageX + 20 );         
+    }).mousemove(function(e) {    
+        //Keep changing the X and Y axis for the tooltip, thus, the tooltip move along with the mouse
+        $("#tooltip").css({top:(e.pageY)+"px",left:(e.pageX+20)+"px"});        
+    });
+
+    $(".loader").fadeOut(400);
 }
-
-
-
-		// d3.select(questionId).select(".responsesBar").append("svg")
-		// 	.attr("height", 30)
-		// 	.attr("width", 30)
-		// 	.attr("class", "agree");
-
-      // <div id="sectionA">
-      // <h3>Section A: Effects of Yolanda</h3>
-  
-      // <div id="A01">
-      //   <h5>1. Family income has returned to pre-Yolanda levels.<br><small>question.hint</small></h5>
-      //   <div class="responsesBar"></div>
-      // </div>
-
-      // </div>
-
-
-// build HTML page first
-// then pass use pass the data to function(s) to style the elements on the page
-// so that later we can build in filtering and just repass the data, not rebuild the whole page
-
 
 
 
