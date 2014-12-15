@@ -41,8 +41,12 @@ function buildHtml() {
 	$.each(surveyQuestions, function(index, question){
 		var sectionId = '#' + question.id;
 		var questionHtml = '<div id="' + question.name + '" class="question-block">' +
-			'<h5>' + question.label + 
+			'<h5>' + question.label +  
 			((question.hint !== "none") ? '<br><small>' + question.hint + '</small>' : '') +
+			'<br><span class="text-tagalog">' + question["label-tagalog"] + '</span>' + 
+			((question["hint-tagalog"] !== "none") ? '<br><small><span class="text-tagalog">' +
+			question["hint-tagalog"] + '</span>' + '</small>' : '') +
+
 			'</h5><div class="responsesBar">' +
 	          '<svg width="100%" height="30">' +
 	            '<rect class="response-bar na" y="0" height="100%" ></rect>' +
