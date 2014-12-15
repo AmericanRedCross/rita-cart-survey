@@ -53,6 +53,7 @@
       </p>
       <p>The livelihood Quality of Life/ Satisfaction survey instrument is designed to collect information on the selected beneficiary level of satisfaction with the assistance received, the extent of their individual recovery and other related outstanding needs. Surveys conducted via mobile data collection using <a target="_blank" href="https://github.com/SEL-Columbia/formhub">formhub</a> and <a target="_blank" href="https://opendatakit.org/">Open Data Kit (ODK)</a>.</p>
       <p>These results are from the initial survey conducted prior to, or shortly after, disbursement of the livelihood grant. The respondents are a randomly selected sample of beneficiaries. A followup survey with the respondents will be conducted in approximately six months. Please submit questions or feedback by <a href="mailto:daniel.joseph@ifrc.org" target="_blank" title="daniel.joseph@ifrc.org">email</a>.</p>
+      <p><b>Note:</b> Surveys are ongoing.</p>
 
       <h4>Legend</h4>
       <table class="table-custom">
@@ -84,7 +85,22 @@
         </tbody>
       </table>
    
-      <p><b>Note:</b> Surveys are ongoing. Currently only <b><span id="surveyCount">0</span></b> are reflected below.</p>
+      
+
+    <div style="margin-top:60px;">
+    <h4> <span id="selected-admin-label">All surveyed provinces</span> 
+      <small>(<span id="selected-survey-count">X</span> of <span id="surveyCount">X</span> surveys conducted)</small></h4>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        Select a Province <span class="caret"></span>
+      </button>
+      <ul id="dropdown-menu-province" class="dropdown-menu" role="menu">
+        <li><a href="#" onClick="provinceSelect('ALL'); return false;">All Provinces</a></li>
+        <li class="divider"></li>
+      </ul>
+    </div>
+    
+    
 
       <div id="sectionA" class="question-section" style="margin-top:60px;">
       <h3>Section A: Effects of Yolanda
@@ -106,7 +122,7 @@
       </div>
 
       <div id="sectionD" class="question-section">
-      <h3>Section D: Income and Expenses <span class="text-tagalog">Kita at Gastusin matapos ang Yolanda (2-3 buwan matapos ang Yolanda)</span> 
+      <h3>Section D: Income and Expenses <span class="text-tagalog">Kita at Gastusin matapos ang Yolanda</span> 
       </h3>
       </div>
 

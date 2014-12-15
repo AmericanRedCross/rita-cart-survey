@@ -12,6 +12,9 @@ body {
 	width: 100%;
 	height: 30px;
 }
+.responsesBar svg {
+	border: 1px solid #6d6e70;
+}
 .table-custom hr {
 	margin: 3px 0; 
 	border-color:#6d6e70;

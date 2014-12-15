@@ -3,10 +3,23 @@
 // global variables
 // ================
 var surveyData = [];
+var filteredData = [];
 var surveyQuestions = [];
 var answers = ["agree_strongly", "agree", "neither", "disagree", "disagree_strongly", "unsure", "na"];
 var summedResponses = [];
 var totalCount = 0;
+
+var adminLookup = {
+	"PH060400000" :	"Aklan",
+	"PH060600000" :	"Antique",
+	"PH061900000" :	"Capiz",
+	"PH063000000" :	"Iloilo",
+	"PH072200000" :	"Cebu",
+	"PH083700000" :	"Leyte",
+	"PH175300000" :	"Palawan",
+	"PH086000000" :	"Samar (Western)",
+	"PH082600000" :	"Eastern Samar"
+};
 
 // helper functions
 // ================
@@ -61,12 +74,50 @@ function buildHtml() {
 		$(sectionId).append(questionHtml);
 		var questionId = '#' + question.name;
 	});
+	buildProvinceDropdown();
+}
+
+function buildProvinceDropdown() {
+  var provinceList = [];
+  $.each(surveyData, function(index, survey){
+    var thisProvincePcode = survey["municipality"].slice(0,6) + "00000";
+    var thisProvince = adminLookup[thisProvincePcode];
+    survey["provinceName"] = thisProvince;
+    if($.inArray(thisProvince, provinceList) === -1){
+      provinceList.push(thisProvince);
+    }
+  });
+  // sort so that the regions appear in alphabetical order in dropdown
+  provinceList = provinceList.sort(); 
+  // create item elements in dropdown list   
+  for(var i = 0; i < provinceList.length; i++) {
+      var item = provinceList[i];
+      var listItemHtml = '<li><a href="#" onClick="provinceSelect(' +"'"+ item +"'"+ '); return false;">' + item + "</li>"
+      $('#dropdown-menu-province').append(listItemHtml);       
+  }
+  provinceSelect("ALL");
+}
+
+function provinceSelect(selection){
+	filteredData = [];
+	if(selection == "ALL"){
+		$("#selected-admin-label").html("All surveyed provinces");
+		filteredData = surveyData;
+
+	} else {
+		$.each(surveyData, function(index, survey){
+			$("#selected-admin-label").html(selection);
+			if(survey.provinceName == selection){
+				filteredData.push(survey);
+			}
+		});
+	}
+	$("#selected-survey-count").html(filteredData.length);
 	parseData();
 }
 
 
 function parseData() {
-
 	summedResponses = [];
 	// count up responses by question (A01, A02, ...) and answer (strongly_agree, agree, ...)
 	$.each(surveyQuestions, function(questionIndex, question){
@@ -78,7 +129,7 @@ function parseData() {
 		questionObject[question.name] = answerCountsObject;
 	
 
-		$.each(surveyData, function(responseIndex, response){
+		$.each(filteredData, function(responseIndex, response){
 			var thisAnswer = response[question.name];
 			questionObject[question.name][thisAnswer] += 1;
 		});
@@ -89,6 +140,7 @@ function parseData() {
 }
 
 function graphData() {
+
 	
 	$.each(summedResponses, function(questionIndex, questionObject){
 		var questionDivId = '';
