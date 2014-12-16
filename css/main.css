@@ -22,10 +22,10 @@ body {
   color: #a0a1a3;
 }
 .loader {
-	height: 100px;
-	width: 100px;
+	height: 70px;
+	width: 70px;
 	position: absolute;
-	top: 20px;
+	top: 5px;
 	right: 20px;
 }
 .responsesBar {
