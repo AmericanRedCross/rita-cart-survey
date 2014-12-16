@@ -34,12 +34,27 @@
   </head>
   <body>
 
+    <div class="nav-admin">
+      <p class="nav-text"><span id="selected-admin-label">All surveyed provinces</span> 
+      <small>(<span id="selected-survey-count">X</span> of <span id="surveyCount">X</span> surveys conducted)</small></p>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+          Select a Province <span class="caret"></span>
+        </button>
+        <ul id="dropdown-menu-province" class="dropdown-menu" role="menu">
+          <li><a href="#" onClick="provinceSelect('ALL'); return false;">All Provinces</a></li>
+          <li class="divider"></li>
+        </ul>
+      </div>
+    </div>
+
     <div id="tooltip"></div>
 
     <div class="container">
 
       <img class="loader" src="img/ajax_loader_gray_512.gif">
 
+      <div style="margin-top:120px;"></div>
       <img class="prc-logo pull-left" src="img/PRC-logo.png">
       <h1 style="margin-left:12px;">Household Livelihood Support <small>Impact Assessment</small></h1>
 
@@ -56,8 +71,9 @@
       <p><b>Note:</b> Surveys are ongoing.</p>
 
       <h4>Legend</h4>
-      <table class="table-custom">
-        <colgroup><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"></colgroup>
+
+      <table class="table-custom" style="margin-top:1px;">
+        <colgroup><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"></colgroup>
         <tbody>
           <tr>
             <td class="square-color agree_strongly"><small>Strongly Agree</small></td>
@@ -68,11 +84,6 @@
             <td class="square-color unsure"><small>Unsure</small></td>
             <td class="square-color na"><small>N/A</small></td>
           </tr>
-        </tbody>
-      </table>
-      <table class="table-custom" style="margin-top:1px;">
-        <colgroup><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"></colgroup>
-        <tbody>
           <tr>
             <td class="square-color agree_strongly"><small>Lubos na sumasang-ayon (5)</small></td>
             <td class="square-color agree"><small>Sang-ayon (4)</small></td>
@@ -87,18 +98,8 @@
    
       
 
-    <div style="margin-top:60px;">
-    <h4> <span id="selected-admin-label">All surveyed provinces</span> 
-      <small>(<span id="selected-survey-count">X</span> of <span id="surveyCount">X</span> surveys conducted)</small></h4>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-        Select a Province <span class="caret"></span>
-      </button>
-      <ul id="dropdown-menu-province" class="dropdown-menu" role="menu">
-        <li><a href="#" onClick="provinceSelect('ALL'); return false;">All Provinces</a></li>
-        <li class="divider"></li>
-      </ul>
-    </div>
+    
+    
     
     
 

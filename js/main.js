@@ -153,7 +153,7 @@ function graphData() {
 	
 		// calculate the percentage for each and add to the div as an html data attr for the tooltip
 		$.each(thisQuestionData, function(answerIndex, answerData){
-			thisQuestionData[answerIndex] = ( answerData / totalCount ) * 100;
+			thisQuestionData[answerIndex] = ( answerData / filteredData.length ) * 100;
 			var selector = questionDivId + " ." + answerIndex;
 			var styledPercentage = noDecimal(thisQuestionData[answerIndex]) + "%";
 			$(selector).attr("data-percentage", styledPercentage);
@@ -184,8 +184,8 @@ function graphData() {
 		
 		// use the calculated widths to adjust the rectangles
 		$.each(thisQuestionData, function(indexa, responseCategorya){
-			var selector = questionDivId + " ." + indexa;
-			$(selector).attr("width", responseCategorya);
+			var selector = " ." + indexa;
+			d3.select(questionDivId).select(selector).transition().attr("width", responseCategorya);
 		});
 		
 
