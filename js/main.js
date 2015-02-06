@@ -83,6 +83,7 @@ function buildProvinceDropdown() {
     var thisProvincePcode = survey["municipality"].slice(0,6) + "00000";
     var thisProvince = adminLookup[thisProvincePcode];
     survey["provinceName"] = thisProvince;
+    if(thisProvince == undefined){console.log(thisProvincePcode);}
     if($.inArray(thisProvince, provinceList) === -1){
       provinceList.push(thisProvince);
     }
