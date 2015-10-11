@@ -19,25 +19,13 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-56269073-6', 'auto');
-      ga('require', 'displayfeatures');
-      ga('send', 'pageview');
-
-    </script>
-    
   </head>
   <body>
 
     <div class="nav-admin">
-      <p class="nav-text"><span id="selected-admin-label">All surveyed provinces</span> 
+      <p class="nav-text"><span id="selected-admin-label">All surveys</span>
       <small>(<span id="selected-survey-count">X</span> of <span id="surveyCount">X</span> surveys conducted)</small></p>
-      <div class="btn-group">
+      <!-- <div class="btn-group">
         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
           Select a Province <span class="caret"></span>
         </button>
@@ -45,7 +33,34 @@
           <li><a href="#" onClick="provinceSelect('ALL'); return false;">All Provinces</a></li>
           <li class="divider"></li>
         </ul>
-      </div>
+      </div> -->
+
+        <button type="button" onClick="resetFilters();" class="btn btn-default btn-xs">Reset <span class="glyphicon glyphicon-refresh"></span></button>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+            Select a Region <span class="caret"></span>
+          </button>
+          <ul id="dropdown-menu-region" class="dropdown-menu" role="menu"></ul>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+            Select a Country <span class="caret"></span>
+          </button>
+          <ul id="dropdown-menu-country" class="dropdown-menu" role="menu">
+            <li class="disabled"><a role="menuitem" href="#">First select a region</a></li>
+          </ul>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+            Select a Community <span class="caret"></span>
+          </button>
+          <ul id="dropdown-menu-community" class="dropdown-menu" role="menu">
+            <li class="disabled"><a role="menuitem" href="#">First select a country</a></li>
+          </ul>
+        </div>
 
       <img class="loader" src="img/ajax_loader_gray_512.gif">
     </div>
@@ -54,92 +69,49 @@
 
     <div class="container">
 
-      
-
       <div style="margin-top:120px;"></div>
-      <img class="prc-logo pull-left" src="img/PRC-logo.png">
-      <h1 style="margin-left:12px;">Household Livelihood Support <small>Impact Assessment</small></h1>
-
+      <h1>RITA <small>CART Survey</small></h1>
       <hr>
+      <p>Herramienta de fortalecimiento de la resiliencia comunitaria (Community Advancing Resilience Toolkit - CART) / Encuesta revisada sobre resiliencia comunitaria (CART II) Esta encuesta domiciliar incluye 24 preguntas que miden “4 sectores interrelacionados y coincidentes que reflejan la contribución a la resiliencia comunitaria: vinculación y responsabilidad, recursos, potencial de transformación y gestión de desastres.” Debido a que esta es una herramienta externa, no se han hecho cambios al cuestionario, asimismo se ha obtenido permiso del autor para ser usado por el equipo de IRP.</p>
+      <p class="text-english">Community Advancing Resilience Toolkit (CART) / Revised Core Community Resilience Items (CART II) survey: This door-to-door survey includes 24 questions measuring “four interrelated, overlapping domains that both reflect and contribute to community resilience: connection and caring, resources, transformative potential and disaster management.”  As this is a tool external to the Red Cross, no changes have been made to the questionnaire. Permission was granted by the questionnaire’s lead author for use in IRP community work.</p>
 
-      <p>The impact assessment of Household Livelihood Assistance (HLA) is designed around two objectives for learning and informing programming for the future:
-        <ol>
-          <li>To ascertain the extent to which households have recovered from the 2013 typhoon in terms of livelihood and income security; and</li>
-          <li>To give insight on the impact and effectiveness of HLA designed to support early livelihood recovery</li>
-        </ol>
-      </p>
-      <p>The livelihood Quality of Life/ Satisfaction survey instrument is designed to collect information on the selected beneficiary level of satisfaction with the assistance received, the extent of their individual recovery and other related outstanding needs. Surveys conducted via mobile data collection using <a target="_blank" href="https://github.com/SEL-Columbia/formhub">formhub</a> and <a target="_blank" href="https://opendatakit.org/">Open Data Kit (ODK)</a>.</p>
-      <p>These results are from the initial survey conducted prior to, or shortly after, disbursement of the livelihood grant. The respondents are a randomly selected sample of beneficiaries. A followup survey with the respondents will be conducted in approximately six months. Please submit questions or feedback by <a href="mailto:daniel.joseph@ifrc.org" target="_blank" title="daniel.joseph@ifrc.org">email</a>.</p>
-      <p><b>Note:</b> Surveys are ongoing.</p>
-
-      <h4>Legend</h4>
+      <h3>Legend</h3>
 
       <table class="table-custom" style="margin-top:1px;">
-        <colgroup><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"></colgroup>
+        <colgroup><col style="width:16.6666%"><col style="width:16.6666%"><col style="width:16.6666%"><col style="width:16.6666%"><col style="width:16.6666%"><col style="width:16.6666%"></colgroup>
         <tbody>
           <tr>
-            <td class="square-color agree_strongly"><small>Strongly Agree</small></td>
-            <td class="square-color agree"><small>Agree</small></td>
-            <td class="square-color neither"><small>Neither Agree/Disagree</small></td>
-            <td class="square-color disagree"><small>Disagree</small></td>
-            <td class="square-color disagree_strongly"><small>Strongly Disagree</small></td>
-            <td class="square-color unsure"><small>Unsure</small></td>
-            <td class="square-color na"><small>N/A</small></td>
+            <td class="square-color strongly_agree"><small>Absolutamente de acuerdo</small></td>
+            <td class="square-color agree"><small>De acuerdo</small></td>
+            <td class="square-color neither"><small>Ni de acuerdo ni en desacuerdo</small></td>
+            <td class="square-color disagree"><small>en desacuerdo</small></td>
+            <td class="square-color strongly_disagree"><small>Absolutamente en desacuerdo</small></td>
+            <td class="square-color dont_know"><small>No sé</small></td>
           </tr>
           <tr>
-            <td class="square-color agree_strongly"><small>Lubos na sumasang-ayon (5)</small></td>
-            <td class="square-color agree"><small>Sang-ayon (4)</small></td>
-            <td class="square-color neither"><small>Wala sa anuman (3)</small></td>
-            <td class="square-color disagree"><small>Hindi sang-ayon (2)</small></td>
-            <td class="square-color disagree_strongly"><small>Lubos na hindi sumasang-ayon (1)</small></td>
-            <td class="square-color unsure"><small>Hindi alam</small></td>
-            <td class="square-color na"><small>Hindi naangkop</small></td>
+            <td class="square-color strongly_agree"><small>Strongly agree</small></td>
+            <td class="square-color agree"><small>Agree</small></td>
+            <td class="square-color neither"><small>Neither agree nor disagree</small></td>
+            <td class="square-color disagree"><small>Disagree</small></td>
+            <td class="square-color strongly_disagree"><small>Strongly disagree</small></td>
+            <td class="square-color dont_know"><small>Don't know</small></td>
           </tr>
         </tbody>
       </table>
-   
-      
 
-    
-    
-    
-    
 
-      <div id="sectionA" class="question-section" style="margin-top:60px;">
-      <h3>Section A: Effects of Yolanda
-        <span class="text-tagalog">/ Epekto ng bagyong Yolanda</span>
-      </h3>
+      <div id="cart" class="question-section" style="margin-top:60px;">
+      <h3>Survey Results</h3>
       </div>
 
-      <div id="sectionB" class="question-section">
-      <h3>Section B: Community Events
-        <span class="text-tagalog">/ Pagtitipon sa komunidad </span>
-        <br><small>(fiestas, parades, religious celebrations, civic events, etc.<span class="text-tagalog"> / piyesta, panrelihirong pagdiriwang, atbp.)</span></small>
-      </h3>
-      </div>
-
-      <div id="sectionC" class="question-section">
-      <h3>Section C: Family and Social Events <span class="text-tagalog">Pagtitipon ng pamilya </span>
-        <br><small>(weddings, birthdays, reunions, anniversaries, holiday parties, etc.<span class="text-tagalog"> / kasalan, kaarawan, reunion, anibersaryo, pagdiriwang, atbp.)</span></small>
-      </h3>
-      </div>
-
-      <div id="sectionD" class="question-section">
-      <h3>Section D: Income and Expenses <span class="text-tagalog">Kita at Gastusin matapos ang Yolanda</span> 
-      </h3>
-      </div>
-
-      <div id="sectionE" class="question-section">
-      <h3>Section E: Community Attitudes</h3>
-      </div>
 
 
       <hr>
       <div style="text-align:right;">
-        <a href="http://ifrc.org/" target="_blank"><img class="ifrc-logo" src="img/IFRC_cobranding.png"></a>
+        <h5>Supported by <a href="http://www.redcross.org/" target="_blank"><img class="arc-logo" src="img/redcross-logo.png"></a></h5>
       </div>
 
-</div>  <!--  /container-fluid  -->
+    </div>  <!--  /container-fluid  -->
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>

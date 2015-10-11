@@ -1,0 +1,25 @@
+id,name,label,label-spanish,hint,hint-spanish
+cart,q1,1. People in this community feel like they belong to the community. ,1. La gente de la comunidad/del vecindario siente que pertenece a la comunidad/vecindario. ,none,none
+cart,q2,2. People in this community are committed to the well-being of the community. ,2. La gente de la comunidad/vecindario están comprometidos con el bienestar de la comunidad/vecindario. ,none,none
+cart,q3,3. People in this community have hope about the future. ,3. La gente de la comunidad/vecindario se siente con esperanzas acerca del futuro. ,none,none
+cart,q4,4. People in this community help each other. ,4. La gente de la comunidad/vecindario se ayudan unos a otros. ,none,none
+cart,q5,5. This community treats people fairly no matter what their background is. ,5. Esta comunidad/vecindario trata justamente a la gente sin importar su origen o creencias religiosas. ,none,none
+cart,q6,6. People in this community support programs for children and families. ,6. La gente de la comunidad/vecindario apoya programas dirigidos a niños y sus familias. ,none,none
+cart,q7,"7. This community has the resources it needs to take care of community problems (resources include money, information, technology, tools, raw materials, and services). ","7. Esta comunidad/vecindario tiene los recursos necesarios para velar por los problemas de la comunidad (recursos incluyendo los monetarios, información, tecnología, herramientas, materias primas y servicios).",none,none
+cart,q8,8. This community has effective leaders. ,8. Esta comunidad/vecindario tiene líderes efectivos. ,none,none
+cart,q9,9. People in this community are able to get the services they need. ,9. La gente de la comunidad/vecindario son capaces de obtener los servicios que necesitan. ,none,none
+cart,q10,10. People in this community know where to go to get things done. ,10. La gente de la comunidad/vecindario sabe a dónde ir para obtener lo que necesita. ,none,none
+cart,q11,11. This community works with organizations and agencies outside the community to get things done. ,11. Esta comunidad/vecindario trabaja con organizaciones y agencias externas a la comunidad para obtener lo que necesita. ,none,none
+cart,q12,12. People in this community communicate with leaders who can help improve the community. ,12. La gente de la comunidad/vecindario se relaciona con líderes que pueden ayudar a mejorar la comunidad. ,none,none
+cart,q13,13. People in this community work together to improve the community. ,13. La gente de la comunidad/vecindario trabaja unida para mejorar la comunidad. ,none,none
+cart,q14,14. This community looks at its successes and failures so it can learn from the past. ,14. Esta comunidad/vecindario reconoce sus éxitos y desaciertos por lo que aprende del pasado. ,none,none
+cart,q15,15.  This community develops skills and finds resources to solve its problems and reach its goals. ,15. Esta comunidad/vecindario desarrolla destrezas y busca recursos para resolver sus problemas y alcanza sus metas. ,none,none
+cart,q16,16. This community has priorities and sets goals for the future. ,16. Esta comunidad/vecindario tiene prioridades y define metas para el futuro. ,none,none
+cart,q17,17. This community tries to prevent disasters. ,17. Esta comunidad/vecindario trata de prevenir desastres. ,none,none
+cart,q18,18. This community actively prepares for future disasters. ,18. Esta comunidad/vecindario se prepara activamente para futuros desastres. ,none,none
+cart,q19,19. This community can provide emergency services during a disaster. ,19. Esta comunidad/vecindario es capaz de proveer servicios de emergencia durante un desastre. ,none,none
+cart,q20,20. This community has services and programs to help people after a disaster. ,20. Esta comunidad/vecindario posee servicios y programas para ayudar a la gente después de la ocurrencia de un desastre. ,none,none
+cart,q21,"21. This community keeps people informed (for example, via television, radio, newspaper, Internet, phone, neighbors) about issues that are relevant to them. ","21. Esta comunidad/vecindario mantiene informada a la gente por cualquier medio (por ejemplo, televisión, radio, periódico, Internet, teléfono, vecinos) acerca de asuntos que le atañen y son relevantes. ",none,none
+cart,q22,"22. If a disaster occurs, this community provides information about what to do. ","22. Si un desastre ocurre, en esta comunidad/vecindario se comparte información acerca de qué hacer. ",none,none
+cart,q23,23.  I get information / communication through this community to help with my home and work life. ,"23. A nivel personal, recibo información de la comunidad que me ayuda en mi vida personal y profesional. ",none,none
+cart,q24,24. People in this community trust public officials. ,24. La gente de la comunidad/vecindario confía en las autoridades públicas.,none,none

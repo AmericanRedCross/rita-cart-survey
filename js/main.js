@@ -1,25 +1,18 @@
-
-
 // global variables
 // ================
+var activeRegion = "ALL";
+var activeCountry = "ALL";
+var activeCommunity = "ALL";
+var activeRegionName = "";
+var activeCountryName = "";
+var activeCommunityName = "";
+
 var surveyData = [];
 var filteredData = [];
 var surveyQuestions = [];
-var answers = ["agree_strongly", "agree", "neither", "disagree", "disagree_strongly", "unsure", "na"];
+var answers = ["strongly_agree", "agree", "neither", "disagree", "strongly_disagree", "dont_know"];
 var summedResponses = [];
 var totalCount = 0;
-
-var adminLookup = {
-	"PH060400000" :	"Aklan",
-	"PH060600000" :	"Antique",
-	"PH061900000" :	"Capiz",
-	"PH063000000" :	"Iloilo",
-	"PH072200000" :	"Cebu",
-	"PH083700000" :	"Leyte",
-	"PH175300000" :	"Palawan",
-	"PH086000000" :	"Samar (Western)",
-	"PH082600000" :	"Eastern Samar"
-};
 
 // helper functions
 // ================
@@ -35,14 +28,14 @@ var noDecimal = d3.format(".0f");
 
 // get CSV files
 function getData(){
-  d3.csv("data/HLA-SurveyData.csv", function(data){ 
+  d3.csv("data/rita-survey-data.csv", function(data){
     surveyData = data;
     getQuestions();
   });
 }
 
 function getQuestions(){
-  d3.csv("data/SurveyQuestions.csv", function(data){ 
+  d3.csv("data/survey-questions.csv", function(data){
     surveyQuestions = data;
     buildHtml();
   });
@@ -50,71 +43,145 @@ function getQuestions(){
 
 function buildHtml() {
 	totalCount = surveyData.length;
-	$("#surveyCount").html(totalCount);
+	$("#surveyCount").html(formatCommas(totalCount.toString()));
 	$.each(surveyQuestions, function(index, question){
 		var sectionId = '#' + question.id;
 		var questionHtml = '<div id="' + question.name + '" class="question-block">' +
-			'<h5>' + question.label +  
-			((question.hint !== "none") ? '<br><small>' + question.hint + '</small>' : '') +
-			'<br><span class="text-tagalog">' + question["label-tagalog"] + '</span>' + 
-			((question["hint-tagalog"] !== "none") ? '<br><small><span class="text-tagalog">' +
-			question["hint-tagalog"] + '</span>' + '</small>' : '') +
-
+			'<h5>' + question["label-spanish"] +
+			((question["hint-spanish"] !== "none") ? '<br><small>' + question["hint-spanish"] + '</small>' : '') +
+			'<br><span class="text-english">' + question["label"] + '</span>' +
+			((question["hint"] !== "none") ? '<br><small><span class="text-english">' +
+			question["hint"] + '</span>' + '</small>' : '') +
 			'</h5><div class="responsesBar">' +
 	          '<svg width="100%" height="30">' +
-	            '<rect class="response-bar na" y="0" height="100%" ></rect>' +
-	            '<rect class="response-bar unsure" y="0" height="100%" ></rect>' +
-	            '<rect class="response-bar disagree_strongly" y="0" height="100%" ></rect>' +
+	            '<rect class="response-bar dont_know" y="0" height="100%" ></rect>' +
+	            '<rect class="response-bar strongly_disagree" y="0" height="100%" ></rect>' +
 	            '<rect class="response-bar disagree" y="0" height="100%" ></rect>' +
 	            '<rect class="response-bar neither" y="0" height="100%" ></rect>' +
 	            '<rect class="response-bar agree" y="0" height="100%" ></rect>' +
-	            '<rect class="response-bar agree_strongly" y="0" height="100%" ></rect>' +
+	            '<rect class="response-bar strongly_agree" y="0" height="100%" ></rect>' +
 	          '</svg>' +
 			'</div>';
 		$(sectionId).append(questionHtml);
-		var questionId = '#' + question.name;
 	});
-	buildProvinceDropdown();
+	buildRegionDropdown();
 }
 
-function buildProvinceDropdown() {
-  var provinceList = [];
-  $.each(surveyData, function(index, survey){
-    var thisProvincePcode = survey["municipality"].slice(0,6) + "00000";
-    var thisProvince = adminLookup[thisProvincePcode];
-    survey["provinceName"] = thisProvince;
-    if(thisProvince == undefined){console.log(thisProvincePcode);}
-    if($.inArray(thisProvince, provinceList) === -1){
-      provinceList.push(thisProvince);
+function buildRegionDropdown() {
+  var regionList = [];
+  $.each(surveyData, function(index, record){
+    var thisRegion = record["region"];
+    if($.inArray(thisRegion, regionList) === -1){
+      regionList.push(thisRegion);
     }
   });
-  // sort so that the regions appear in alphabetical order in dropdown
-  provinceList = provinceList.sort(); 
-  // create item elements in dropdown list   
-  for(var i = 0; i < provinceList.length; i++) {
-      var item = provinceList[i];
-      var listItemHtml = '<li><a href="#" onClick="provinceSelect(' +"'"+ item +"'"+ '); return false;">' + item + "</li>"
-      $('#dropdown-menu-province').append(listItemHtml);       
+  // sort so that the provinces appear in alphabetical order in dropdown
+  regionList = regionList.sort();
+  // create item elements in dropdown list
+  for(var i = 0; i < regionList.length; i++) {
+      var item = regionList[i];
+      var listItemHtml = '<li id="'+item+'"><a href="#" onClick="regionSelect('+
+        "'"+ item +"', this"+ '); return false;">' + item + "</li>";
+      $('#dropdown-menu-region').append(listItemHtml);
   }
-  provinceSelect("ALL");
+  $("#loading").fadeOut(300);
+  filterData();
 }
 
-function provinceSelect(selection){
-	filteredData = [];
-	if(selection == "ALL"){
-		$("#selected-admin-label").html("All surveyed provinces");
-		filteredData = surveyData;
+function resetFilters() {
+  activeRegion= "ALL";
+  activeCountry = "ALL";
+  activeCommunity = "ALL";
+  $('#dropdown-menu-country').html('<li class="disabled"><a role="menuitem" href="#">First select a region</a></li>');
+  $('#dropdown-menu-community').html('<li class="disabled"><a role="menuitem" href="#">First select a country</a></li>');
+  $("#selected-admin-label").html("All surveys");
+	filterData();
+}
 
-	} else {
-		$.each(surveyData, function(index, survey){
-			$("#selected-admin-label").html(selection);
-			if(survey.provinceName == selection){
-				filteredData.push(survey);
-			}
-		});
-	}
-	$("#selected-survey-count").html(filteredData.length);
-	parseData();
+function regionSelect(region, element){
+  activeRegion = region;
+  activeRegionName = $(element).html();
+  activeCountry = "ALL";
+  activeCountryName = "";
+  activeCommunity = "ALL";
+  activeCommunityName = "";
+  $("#selected-admin-label").html(activeRegionName);
+  buildCountryDropdown();
+	filterData();
+}
+
+function countrySelect(country, element){
+  activeCountry = country;
+  activeCountryName = $(element).html();
+  activeCommunity = "ALL";
+  activeCommunityName = "";
+  $("#selected-admin-label").html(activeRegionName + ", " + activeCountryName);
+  buildCommunityDropdown();
+	filterData();
+}
+
+function communitySelect(community, element){
+  activeCommunity = community;
+  activeCommunityName = $(element).html();
+  $("#selected-admin-label").html(activeRegionName + ", " + activeCountryName + ", "+ activeCommunityName);
+	filterData();
+}
+
+function buildCountryDropdown(){
+  $('#dropdown-menu-country').empty();
+  $('#dropdown-menu-community').html('<li class="disabled"><a role="menuitem" href="#">First select a country</a></li>');
+  var countryList = [];
+  $.each(surveyData, function(index, record){
+    var thisCountry = record["country"];
+    if($.inArray(thisCountry, countryList) === -1 && record.region === activeRegion){
+      countryList.push(thisCountry);
+    }
+  });
+  // sort so that they appear in alphabetical order in dropdown
+  countryList = countryList.sort();
+  // create item elements in dropdown list
+  for(var i = 0; i < countryList.length; i++) {
+      var item = countryList[i];
+      var listItemHtml = '<li id="'+item+'"><a href="#" onClick="countrySelect(' +
+        "'"+ item +"', this"+ '); return false;">' + item + "</li>"
+      $('#dropdown-menu-country').append(listItemHtml);
+  }
+}
+
+function buildCommunityDropdown() {
+  $('#dropdown-menu-community').empty();
+  var communityList = [];
+  $.each(surveyData, function(index, record){
+    var thisCommunity = record["community"];
+    if($.inArray(thisCommunity, communityList) === -1 && record.region === activeRegion && record.country === activeCountry){
+      communityList.push(thisCommunity);
+    }
+  });
+  // sort so that they appear in alphabetical order in dropdown
+  communityList = communityList.sort();
+  // create item elements in dropdown list
+  for(var i = 0; i < communityList.length; i++) {
+      var item = communityList[i];
+      var listItemHtml = '<li id="'+item+'"><a href="#" onClick="communitySelect(' +
+        "'"+ item +"', this"+ '); return false;">' + item + "</li>"
+      $('#dropdown-menu-community').append(listItemHtml);
+  }
+}
+
+
+function filterData(){
+  filteredData = [];
+  $.each(surveyData, function(index, record){
+      if(record.region === activeRegion || "ALL" === activeRegion){
+        if(record.country === activeCountry || "ALL" === activeCountry){
+          if(record.community === activeCommunity || "ALL" === activeCommunity){
+            filteredData.push(record);
+          }
+        }
+      }
+  });
+  $("#selected-survey-count").html(formatCommas(filteredData.length.toString()));
+  parseData();
 }
 
 
@@ -128,30 +195,30 @@ function parseData() {
 			answerCountsObject[answer] = 0;
 		});
 		questionObject[question.name] = answerCountsObject;
-	
+
 
 		$.each(filteredData, function(responseIndex, response){
 			var thisAnswer = response[question.name];
 			questionObject[question.name][thisAnswer] += 1;
 		});
 		summedResponses.push(questionObject);
-		// summedResponses = { {A01: {agree:52, agree_strongly:5, disagree:16, ...}},{A02: {agree:56; ...}}, ... }
+		// summedResponses = { {A01: {agree:52, strongly_agree:5, disagree:16, ...}},{A02: {agree:56; ...}}, ... }
 	});
 	graphData();
 }
 
 function graphData() {
 
-	
+
 	$.each(summedResponses, function(questionIndex, questionObject){
 		var questionDivId = '';
 		var thisQuestionData = {};
 
-		$.each(questionObject, function(questionIndex, questionData){ 
+		$.each(questionObject, function(questionIndex, questionData){
 			questionDivId = '#' + questionIndex; // "#A01", "#A02", ...
 			thisQuestionData = questionData;
 		});
-	
+
 		// calculate the percentage for each and add to the div as an html data attr for the tooltip
 		$.each(thisQuestionData, function(answerIndex, answerData){
 			thisQuestionData[answerIndex] = ( answerData / filteredData.length ) * 100;
@@ -162,124 +229,52 @@ function graphData() {
 
 		// the viz is overlapping svg rectangle in the same category order
 		// calculate each width as its own percentage plus those to the left
-		var agree_strongly = thisQuestionData["agree_strongly"];
-		thisQuestionData["agree_strongly"] = agree_strongly.toString() + "%";
-		
-		var agree = agree_strongly + thisQuestionData["agree"];
+		var strongly_agree = thisQuestionData["strongly_agree"];
+		thisQuestionData["strongly_agree"] = strongly_agree.toString() + "%";
+
+		var agree = strongly_agree + thisQuestionData["agree"];
 		thisQuestionData["agree"] = agree.toString() + "%";
-		
+
 		var neither = agree + thisQuestionData["neither"];
 		thisQuestionData["neither"] = neither.toString() + "%";
-		
+
 		var disagree = neither + thisQuestionData["disagree"];
 		thisQuestionData["disagree"] = disagree.toString() + "%";
-		
-		var disagree_strongly = disagree + thisQuestionData["disagree_strongly"];
-		thisQuestionData["disagree_strongly"] = disagree_strongly.toString() + "%";
-		
-		var unsure = disagree_strongly + thisQuestionData["unsure"];
-		thisQuestionData["unsure"] = unsure.toString() + "%";
-		
-		var na = unsure + thisQuestionData["na"];
-		thisQuestionData["na"] = na.toString() + "%";
-		
+
+		var strongly_disagree = disagree + thisQuestionData["strongly_disagree"];
+		thisQuestionData["strongly_disagree"] = strongly_disagree.toString() + "%";
+
+		var dontknow = strongly_disagree + thisQuestionData["dont_know"];
+		thisQuestionData["dont_know"] = dontknow.toString() + "%";
+
+
+
 		// use the calculated widths to adjust the rectangles
 		$.each(thisQuestionData, function(indexa, responseCategorya){
 			var selector = " ." + indexa;
 			d3.select(questionDivId).select(selector).transition().attr("width", responseCategorya);
 		});
-		
+
 
 	});
 
 	d3.selectAll(".response-bar").on("mouseover", function(d){
 		var tooltipText = $(this).attr("data-percentage");
-		$('#tooltip').append(tooltipText);       
-	}).on("mouseout", function(){ 
+		$('#tooltip').append(tooltipText);
+	}).on("mouseout", function(){
         $('#tooltip').empty();
     });
-	$(".response-bar").mouseover(function(e) {        
+	$(".response-bar").mouseover(function(e) {
         //Set the X and Y axis of the tooltip
         $('#tooltip').css('top', e.pageY  );
-        $('#tooltip').css('left', e.pageX + 20 );         
-    }).mousemove(function(e) {    
+        $('#tooltip').css('left', e.pageX + 20 );
+    }).mousemove(function(e) {
         //Keep changing the X and Y axis for the tooltip, thus, the tooltip move along with the mouse
-        $("#tooltip").css({top:(e.pageY)+"px",left:(e.pageX+20)+"px"});        
+        $("#tooltip").css({top:(e.pageY)+"px",left:(e.pageX+20)+"px"});
     });
 
     $(".loader").fadeOut(400);
 }
-
-
-
-
-// function generateGraphs(){
-//   var admin4List = [];
-//   $.each(displayedShelters, function(index, shelter){
-//     if($.inArray(shelter.properties.admin4, admin4List) === -1){
-//       admin4List.push(shelter.properties.admin4);
-//     }
-//   });
-//   var maleYoung = 0;
-//   var maleChild = 0;
-//   var maleAdult = 0;
-//   var maleSenior = 0;
-//   var femaleYoung = 0;
-//   var femaleChild = 0;
-//   var femaleAdult = 0;
-//   var femaleSenior = 0;
-//   var pregnant = 0;
-//   var mSingleHead = 0;
-//   var fSingleHead = 0;
-//   var mDisabled = 0;
-//   var fDisabled = 0;
-//   $.each(demographicData, function(index, household){
-//     if($.inArray(household.admin4, admin4List) !== -1){
-//       maleYoung += parseInt(household.male_young, 10);
-//       maleChild += parseInt(household.male_child, 10);
-//       maleAdult += parseInt(household.male_adult, 10);
-//       maleSenior += parseInt(household.male_senior, 10);
-//       femaleYoung += parseInt(household.female_young, 10);
-//       femaleChild += parseInt(household.female_child, 10);
-//       femaleAdult += parseInt(household.female_adult, 10);
-//       femaleSenior += parseInt(household.female_senior, 10); 
-//       pregnant += parseInt(household["vulnerabilities/pregnant_lactating"], 10);     
-//       mDisabled += parseInt(household["vulnerabilities/disabled_ill_male"], 10);
-//       fDisabled += parseInt(household["vulnerabilities/disabled_ill_female"], 10);
-//       if(household["vulnerabilities/single_headed"] === "yes"){
-//         switch(household["vulnerabilities/single_headed_sex"]){
-//           case 'male':
-//             mSingleHead += 1;
-//             break;
-//           case 'female':
-//             fSingleHead += 1;
-//             break;
-//         }
-//       }
-//     }
-//   });
-//   var femaleTotal = femaleYoung + femaleChild + femaleAdult + femaleSenior;
-//   var maleTotal = maleYoung + maleChild + maleAdult + maleSenior;
-//   var grandTotal = femaleTotal + maleTotal;
-//   $("#maleYoung").html(formatCommas(maleYoung));
-//   $("#maleChild").html(formatCommas(maleChild));
-//   $("#maleAdult").html(formatCommas(maleAdult));
-//   $("#maleSenior").html(formatCommas(maleSenior));
-//   $("#femaleYoung").html(formatCommas(femaleYoung));
-//   $("#femaleChild").html(formatCommas(femaleChild));
-//   $("#femaleAdult").html(formatCommas(femaleAdult));
-//   $("#femaleSenior").html(formatCommas(femaleSenior));
-//   $("#pregnant").html(formatCommas(pregnant));
-//   $("#mSingleHead").html(formatCommas(mSingleHead));
-//   $("#fSingleHead").html(formatCommas(fSingleHead));
-//   $("#mDisabled").html(formatCommas(mDisabled));
-//   $("#fDisabled").html(formatCommas(fDisabled));
-//   $("#mSingleHead").html(formatCommas(mSingleHead));
-//   $("#fSingleHead").html(formatCommas(fSingleHead));
-//   $("#maleTotal").html(formatCommas(maleTotal));
-//   $("#femaleTotal").html(formatCommas(femaleTotal));
-//   $("#grandTotal").html(formatCommas(grandTotal));
-// }
 
 //start function chain for map
 getData();
